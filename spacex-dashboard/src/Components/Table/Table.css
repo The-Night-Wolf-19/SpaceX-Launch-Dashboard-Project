@@ -1,0 +1,13 @@
+.Table {
+  margin-top: 1%;
+}
+.MuiDataGrid-columnSeparator {
+  opacity: 0 !important;
+  color: none;
+}
+.customColumn {
+  background: #f4f5f7;
+}
+.launch-status {
+  text-align: center;
+}
