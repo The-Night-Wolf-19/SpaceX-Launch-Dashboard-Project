@@ -5,9 +5,36 @@
   opacity: 0 !important;
   color: none;
 }
+.MuiDataGrid-root .MuiDataGrid-cell {
+  border-bottom: none !important;
+}
+.MuiDataGrid-root .MuiDataGrid-colCellWrapper {
+  background: #f4f5f7 !important ;
+}
 .customColumn {
   background: #f4f5f7;
 }
 .launch-status {
   text-align: center;
+}
+.div-loading {
+  justify-content: center;
+}
+
+/* .makeStyles-paper-4 {
+  width: 50% !important;
+  top: 40% !important;
+  left: 38% !important;
+} */
+.flight-row {
+  display: flex;
+  justify-content: space-around;
+}
+.top-section {
+  display: flex;
+}
+.top-section-image {
+  width: 72px;
+  height: 72px;
+  margin-right: 5px;
 }

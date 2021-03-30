@@ -18,32 +18,20 @@ import "react-date-range/dist/theme/default.css";
 import { DateRange } from "react-date-range";
 import { addDays, addMonths } from "date-fns";
 import DataTable from "./Components/Table/Table";
-import axios from "axios";
+import api from "./api";
 
 function App() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [dropdownOption, setDropDownOption] = useState("All Launches");
   const [apiData, setApiData] = useState([]);
 
-  const sortUpcoming = () => {
-    return (apiData || []).filter((item) => {
-      return item.upcoming === true;
-    });
-  };
-
   useEffect(() => {
     let mounted = true;
     const fetchData = async () => {
-      let response = await axios
-        .create({
-          baseURL: "https://api.spacexdata.com/v3/launches",
-        })
-        .get("/");
+      let response = await api.get("/");
 
       if (response.status === 200 && mounted) {
         setApiData(response.data);
-        let new_res = sortUpcoming();
-        console.log(new_res);
       } else console.log("Something wrong");
     };
 
@@ -59,8 +47,26 @@ function App() {
       Upcoming: "Upcoming Launches",
     };
 
-    const HandleDropClick = (term) => {
+    const HandleDropClick = async (term) => {
       setDropDownOption(term);
+      setApiData([]);
+      if (term === enums.Upcoming) {
+        let response = await api.get("/upcoming");
+
+        if (response.status === 200) setApiData(response.data);
+      } else if (term === enums.SuccessFul) {
+        let response = await api.get("/past?launch_success=true");
+
+        if (response.status === 200) setApiData(response.data);
+      } else if (term === enums.Failed) {
+        let response = await api.get("/past?launch_success=false");
+
+        if (response.status === 200) setApiData(response.data);
+      } else {
+        let response = await api.get("/");
+
+        if (response.status === 200) setApiData(response.data);
+      }
     };
 
     return (
