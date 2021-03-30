@@ -22,8 +22,14 @@ import api from "./api";
 
 function App() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [dropdownOption, setDropDownOption] = useState("All Launches");
   const [apiData, setApiData] = useState([]);
+  const enums = {
+    All: "All Launches",
+    SuccessFul: "Successful Launches",
+    Failed: "Failed Launches",
+    Upcoming: "Upcoming Launches",
+  };
+  const [dropdownOption, setDropDownOption] = useState(enums.All);
 
   useEffect(() => {
     let mounted = true;
@@ -40,13 +46,6 @@ function App() {
   }, []);
 
   const LaunchFilter = () => {
-    const enums = {
-      All: "All Launches",
-      SuccessFul: "Successful Launches",
-      Failed: "Failed Launches",
-      Upcoming: "Upcoming Launches",
-    };
-
     const HandleDropClick = async (term) => {
       setDropDownOption(term);
       setApiData([]);
@@ -121,12 +120,39 @@ function App() {
     const handleClose = () => {
       setOpen(false);
     };
+
+    const HandleFilter = async () => {
+      setApiData([]);
+      if (dropdownOption === enums.SuccessFul) {
+        let response = await api.get(
+          `/past?launch_success=true&start="${state[0].startDate}"&end="${state[0].endDate}"`
+        );
+        if (response.status === 200) setApiData(response.data);
+      } else if (dropdownOption === enums.Failed) {
+        let response = await api.get(
+          `/past?launch_success=false&start="${state[0].startDate}"&end="${state[0].endDate}"`
+        );
+        if (response.status === 200) setApiData(response.data);
+      } else if (dropdownOption === enums.All) {
+        let response = await api.get(
+          `?start="${state[0].startDate}"&end="${state[0].endDate}"`
+        );
+        if (response.status === 200) setApiData(response.data);
+      } else {
+        let response = await api.get(
+          `?start="${state[0].startDate}"&end="${state[0].endDate}"`
+        );
+        if (response.status === 200) setApiData(response.data);
+      }
+    };
+
     const [state, setState] = useState([
       {
         // startDate: new Date(),
         // endDate: addDays(new Date(), 7),
         startDate: new Date(),
         endDate: addMonths(new Date(), -6),
+        // endDate: null,
         key: "selection",
       },
     ]);
@@ -138,7 +164,7 @@ function App() {
           type="button"
           onClick={handleOpen}
         >
-          Last 6 Months
+          Filter By Date
         </button>
         <Modal
           aria-labelledby="transition-modal-title"
@@ -156,16 +182,18 @@ function App() {
             <div className={classes.paper}>
               <div className="modalMenu">
                 <div className="modalRight">
-                  <h6 className="CustomDate">Past week</h6>
-                  <h6 className="CustomDate">Past month</h6>
-                  <h6 className="CustomDate">Past 3 months</h6>
-                  <h6 className="CustomDate">Past 6 months</h6>
-                  <h6 className="CustomDate">Past year</h6>
-                  <h6 className="CustomDate">Past 2 years</h6>
+                  <button
+                    className="filter-button"
+                    onClick={() => HandleFilter()}
+                  >
+                    Filter
+                  </button>
                 </div>
                 <DateRange
                   editableDateInputs={true}
-                  onChange={(item) => setState([item.selection])}
+                  onChange={(item) => {
+                    setState([item.selection]);
+                  }}
                   moveRangeOnFirstSelection={false}
                   months={2}
                   ranges={state}

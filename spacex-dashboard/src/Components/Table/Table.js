@@ -130,6 +130,7 @@ const DataTable = ({ data }) => {
   const classesDetail = useDetailStyles();
   const [open, setOpen] = React.useState(false);
   const [flightData, setflightData] = React.useState({});
+  const [loading, set_loading] = React.useState(true);
   const rows = data.map((item, index) => {
     let data = {
       id: index + 1,
@@ -159,10 +160,19 @@ const DataTable = ({ data }) => {
     let response = await api.get(`/${data[id - 1].flight_number}`);
     if (response.status === 200) {
       console.log(response.data);
+      set_loading(false);
       setflightData(response.data);
     }
   };
-
+  const ColorChooser = ({ param }) => {
+    return (
+      <div className="status">
+        <span id={param} className="status-text">
+          &nbsp;&nbsp;&nbsp;{param}&nbsp;&nbsp;&nbsp;
+        </span>
+      </div>
+    );
+  };
   return (
     <div className="Table" style={{ width: "74.55%" }}>
       <DataGrid
@@ -189,76 +199,100 @@ const DataTable = ({ data }) => {
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <div className={classesDetail.paper}>
-            <div className="top-section">
-              <img
-                className="top-section-image"
-                src={flightData?.links?.mission_patch_small}
-                alt=" "
-              ></img>
-              <div>
-                <h5>{flightData?.mission_name}</h5>
-                <p>{flightData?.rocket?.rocket_name}</p>
-              </div>
-              <p>{flightData?.launch_success}</p>
-            </div>
-            <div className="detailDescription">
-              <p>
-                {flightData?.details}{" "}
-                <a
-                  href={flightData?.links?.wikipedia}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                >
-                  Wikipedia
-                </a>
-              </p>
-            </div>
-            <div className="lower-section">
-              <div className="flight-row">
-                <p>Flight Number</p>
-                <p>{flightData?.flight_number}</p>
-              </div>
-              <div className="flight-row">
-                <p>Mission Name</p>
-                <p>{flightData?.mission_name}</p>
-              </div>
-              <div className="flight-row">
-                <p>Rocket Type</p>
-                <p>{flightData?.rocket?.rocket_type}</p>
-              </div>
-              <div className="flight-row">
-                <p>Rocket Name</p>
-                <p>{flightData?.rocket?.rocket_name}</p>
-              </div>
-              <div className="flight-row">
-                <p>Manufacturer</p>
-                <p>SpaceX</p>
-              </div>
-              <div className="flight-row">
-                <p>Nationality</p>
-                <p>SpaceX</p>
-              </div>
-              <div className="flight-row">
-                <p>Launch Date</p>
-                <p>{flightData?.launch_date_utc}</p>
-              </div>
-              <div className="flight-row">
-                <p>Payload Type</p>
-                <p>
-                  {flightData?.rocket?.second_stage?.payloads[0]?.payload_type}
+          {loading ? (
+            <CustomLoader />
+          ) : (
+            <div className={classesDetail.paper} id="description-modal">
+              <div className="top-section">
+                <img
+                  className="top-section-image"
+                  src={flightData?.links?.mission_patch_small}
+                  alt=" "
+                ></img>
+                <div>
+                  <h5>{flightData?.mission_name}</h5>
+                  <p>{flightData?.rocket?.rocket_name}</p>
+                </div>
+                <p id="mission-status">
+                  {flightData?.upcoming ? (
+                    <ColorChooser param="Upcoming" />
+                  ) : flightData?.launch_success ? (
+                    <ColorChooser param="Success" />
+                  ) : (
+                    <ColorChooser param="Failed" />
+                  )}
                 </p>
               </div>
-              <div className="flight-row">
-                <p>Orbit</p>
-                <p>{flightData?.rocket?.second_stage?.payloads[0]?.orbit}</p>
+              <div className="detailDescription">
+                <p className="description-para">
+                  {flightData?.details}{" "}
+                  <a
+                    href={flightData?.links?.wikipedia}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    Wikipedia
+                  </a>
+                </p>
               </div>
-              <div className="flight-row">
-                <p>Launch Site</p>
-                <p>{flightData?.launch_site?.site_name}</p>
+              <div className="lower-section">
+                <div className="flight-row">
+                  <p>Flight Number</p>
+                  <p>{flightData?.flight_number}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Mission Name</p>
+                  <p>{flightData?.mission_name}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Rocket Type</p>
+                  <p>{flightData?.rocket?.rocket_type}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Rocket Name</p>
+                  <p>{flightData?.rocket?.rocket_name}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Manufacturer</p>
+                  <p>SpaceX</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Nationality</p>
+                  <p>SpaceX</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Launch Date</p>
+                  <p>{flightData?.launch_date_utc}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Payload Type</p>
+                  <p>
+                    {
+                      flightData?.rocket?.second_stage?.payloads[0]
+                        ?.payload_type
+                    }
+                  </p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Orbit</p>
+                  <p>{flightData?.rocket?.second_stage?.payloads[0]?.orbit}</p>
+                </div>
+                <hr className="detail-separator" />
+                <div className="flight-row">
+                  <p>Launch Site</p>
+                  <p>{flightData?.launch_site?.site_name}</p>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </Modal>
       </div>
     </div>
