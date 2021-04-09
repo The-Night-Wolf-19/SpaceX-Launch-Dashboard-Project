@@ -7,10 +7,17 @@
 }
 .MuiDataGrid-root .MuiDataGrid-cell {
   border-bottom: none !important;
+  /* color: white; */
 }
 .MuiDataGrid-root .MuiDataGrid-colCellWrapper {
   background: #f4f5f7 !important ;
 }
+/* .MuiDataGrid-row.Mui-even :hover {
+  background: white;
+} */
+/* .rendering-zone :hover {
+  background: white;
+} */
 .customColumn {
   background: #f4f5f7;
 }

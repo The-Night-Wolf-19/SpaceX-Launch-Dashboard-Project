@@ -19,7 +19,7 @@ import { DateRange } from "react-date-range";
 import { addDays, addMonths } from "date-fns";
 import DataTable from "./Components/Table/Table";
 import api from "./api";
-
+import bg from "./background.webp";
 function App() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [apiData, setApiData] = useState([]);
@@ -209,6 +209,7 @@ function App() {
 
   return (
     <div className="App">
+      <img src={bg} alt="" className="bgImg" />
       <Header />
       <div className="filter-div">
         {/* <h4>Last 6 Months</h4> */}
