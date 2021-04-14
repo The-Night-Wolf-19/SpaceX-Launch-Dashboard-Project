@@ -2,7 +2,7 @@
 
 Launch Dashboard for SpaceX
 
-Project is hosted at https://spacex-dashboard-tnw19.herokuapp.com/
+Project is hosted at https://spacex-dashboard-tnw19.netlify.app/
 
 # Getting Started with Create React App
 
